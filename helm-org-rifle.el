@@ -162,7 +162,8 @@
    "Show entry in indirect buffer" 'helm-org-rifle-show-entry-in-indirect-buffer
    "Show entry in real buffer" 'helm-org-rifle-show-entry-in-real-buffer
    "Clock in" 'helm-org-rifle--clock-in
-   "Refile" 'helm-org-rifle--refile)
+   "Refile" 'helm-org-rifle--refile
+   "Link to" . helm-org-rifle-insert-link)
   "Helm actions for `helm-org-rifle' commands."
   :type '(alist :key-type string :value-type function))
 
@@ -1679,6 +1680,24 @@ Return sorting function corresponding to chosen description string."
   (--map (list (plist-get it :text)
                (plist-get it :node-beg))
          nodes))
+
+(defun helm-org-rifle-insert-link (candidate)
+  "Find org headings and link to that"
+  (helm-attrset 'new-buffer nil)  ; Prevent the buffer from being cleaned up
+  ;; Save current editing location
+  (-let (((buffer . pos) candidate))
+    (push-mark-command nil)
+    (with-current-buffer buffer
+      (goto-char pos)
+      ;; If use ID and pretend to be interactive, then kill-new may not work.
+      ;; (kill-new (car (org-store-link 1 t))))
+      (org-store-link 1 t))
+    )
+  ;; After reading all the defuns, I found this one
+  (pop-to-mark-command)
+  (org-insert-last-stored-link 1)
+  (insert " ")
+  )
 
 (provide 'helm-org-rifle)
 
