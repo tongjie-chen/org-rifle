@@ -163,7 +163,7 @@
    "Show entry in real buffer" 'helm-org-rifle-show-entry-in-real-buffer
    "Clock in" 'helm-org-rifle--clock-in
    "Refile" 'helm-org-rifle--refile
-   "Link to" . helm-org-rifle-insert-link)
+   "Link to" 'helm-org-rifle-insert-link)
   "Helm actions for `helm-org-rifle' commands."
   :type '(alist :key-type string :value-type function))
 
